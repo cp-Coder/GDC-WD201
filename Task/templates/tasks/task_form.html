@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Todo Manager</title>
+  </head>
+
+  <body>
+    <form method="post">
+      {% csrf_token %}
+      <div class="min-h-screen md:px-20 pt-6">
+        <div class=" bg-white rounded-md px-6 py-10 max-w-2xl mx-auto">
+          <h1 class="text-center text-2xl font-bold text-gray-500 mb-10">
+            {% if form.instance.id %}
+            Update Todo
+            {% else %}
+            Create Todo
+            {% endif %}
+          </h1>
+          <div class="space-y-4">
+            <div>
+              <label for="id_title" class="text-lx font-serif">Title:</label>
+              <input type="text" placeholder="Title" name="title" id="id_title" maxlength="100"
+                value="{% if form.instance.id %} {{ form.title.value }} {% endif %}"
+                class="ml-2 outline-none py-1 px-2 text-md border-2 rounded-md" />
+            </div>
+            <div>
+              <label for="id_description" class="block mb-2 text-lg font-serif">Description:</label>
+              <textarea id="id_description" cols="40" rows="10" name="description" placeholder="Write here.."
+                class="w-full font-serif  p-4 text-gray-600 bg-gray-200 outline-none rounded-md">{% if form.instance.id %} {{ form.description.value }} {% endif %}</textarea>
+            </div>
+            <div>
+              <label for="id_priority" class="text-lx font-serif">Priority:</label>
+              <input type="text" placeholder="Priority" id="id_priority"
+                value="{% if form.instance.id %} {{ form.priority.value }} {% endif %}"
+                class="ml-2 outline-none py-1 px-2 text-md border-2 rounded-md" name="priority" />
+            </div>
+            <div>
+              <label for="id_completed" class="text-lx font-serif">Completed:</label>
+              <input type="checkbox" id="id_completed" name="completed"
+                class="ml-2 outline-none py-1 px-2 text-md border-2 rounded-md " />
+            </div>
+            <button type="submit"
+              class="w-96 mb-10 px-6 py-2 mx-auto block rounded-md text-lg font-semibold text-indigo-100 bg-red-500">Save</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </body>
+
+</html>
