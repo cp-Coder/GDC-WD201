@@ -15,9 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework_nested import routers
+from tasks.api import TaskViewSet, TaskChangeViewSet
+
+router = routers.SimpleRouter()
+router.register("api/task", TaskViewSet)
+router.register("api/history", TaskChangeViewSet, basename="history")
+
+nested_history_router = routers.NestedSimpleRouter(router, "api/task", lookup="task")
+nested_history_router.register("history", TaskChangeViewSet, basename="task-history")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("tasks/", include("tasks.urls")),
     path("user/", include("accounts.urls")),
-]
+] + router.urls + nested_history_router.urls
