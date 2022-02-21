@@ -10,3 +10,4 @@ class UserSignUpView(CreateView):
 class UserLoginView(LoginView):
   template_name = "accounts/login.html"
 
+
