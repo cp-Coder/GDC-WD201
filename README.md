@@ -28,6 +28,38 @@ pip install -r requirements.txt
 
 Once all the required features are implemented, push the code to a GitHub repository and submit the link to the repo.
 
-## Help
+## Usage
+__For Linux__:
+```py
+virtualenv .env
+source .env/bin/activate
+pip3 install -r requirements.txt
 
-To understand how querysets can be ordered take a look [here](https://docs.djangoproject.com/en/3.2/ref/models/querysets/#order-by) , you can use the exists method to check if an object already exists in the database, the exists method is documented [here](https://docs.djangoproject.com/en/3.2/ref/models/querysets/#django.db.models.query.QuerySet.exists)
+# on same terminal
+python3 manage.py runserver
+
+# on two different terminal
+celery -A task_manager beat
+celery -A task_manager worker --loglevel INFO
+```
+__For Window__:
+In order to run redis, we have to first run the redis docker image:
+```
+# install docker desktop
+# then run the following cmd in terminal
+docker run --name gdc -p 6379:6379 -d redis
+```
+
+```py
+# inside the code directory
+python -m venv .env
+.env/Scripts/activate
+pip install -r requirements.txt
+
+# on same terminal
+python manage.py runserver
+
+# on different terminals
+celery -A task_manager beat
+celery -A tasks_manager worker --loglevel=INFO -E --pool=solo
+```
