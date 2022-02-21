@@ -29,7 +29,7 @@ def send_report(user):
 @shared_task
 def fetch_report():
   logger.info("fetch_settings: Started...")
-  start = datetime.now(timezone.utc) - timedelta(days=2)
+  start = datetime.now(timezone.utc) - timedelta(days=1)
   logger.info(f"{start}\n")
   report_set = Report.objects.filter(
     send_report=True,

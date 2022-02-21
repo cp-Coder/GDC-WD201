@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.timezone import now
 
 STATUS_CHOICES = (
  ("PENDING", "PENDING"),
@@ -22,3 +23,15 @@ class TaskChange(models.Model):
   previous_status = models.CharField(max_length=100, choices=STATUS_CHOICES)
   new_status = models.CharField(max_length=100, choices=STATUS_CHOICES)
   changed_date = models.DateTimeField(auto_now=True)
+
+
+class Report(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  time = models.TimeField(null=True)
+  last_updated = models.DateTimeField(null=True)
+  send_report = models.BooleanField(default=True)
+
+  def save(self, *args, **kwargs):
+    if not self.last_updated:
+      self.last_updated = now()
+    super().save(*args, **kwargs)

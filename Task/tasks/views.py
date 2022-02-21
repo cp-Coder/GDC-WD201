@@ -2,7 +2,7 @@ from django import forms
 from django.http import HttpResponseRedirect
 from django.views.generic import CreateView, DeleteView, UpdateView, ListView
 from .mixins import OwnerMixin
-from .models import Task, TaskChange, STATUS_CHOICES
+from .models import Task, Report, STATUS_CHOICES
 from django.db import transaction
 
 
@@ -18,7 +18,17 @@ class TaskForm(forms.ModelForm):
         "completed": forms.CheckboxInput(attrs={"class": "form-check-input"}),
       }
 
+class UserSettingsForm(forms.ModelForm):  
 
+    class Meta:
+        model = Report
+        fields = ("time", "send_report")
+        widgets = {
+            "time": forms.TimeInput(
+                attrs={"class": "form-control", "type": "time"}
+            ),
+            "send_report": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
 class BaseTaskView(OwnerMixin):
   model = Task
   form_class = TaskForm
@@ -105,3 +115,11 @@ class TaskUpdateView(BaseTaskView, UpdateView):
 
 class TaskDeleteView(BaseTaskView, DeleteView):
   form_class = forms.Form
+
+class UserSettingsView(OwnerMixin, UpdateView):
+    form_class = UserSettingsForm
+    template_name = "tasks/user_settings.html"
+    success_url = "/tasks/"
+
+    def get_object(self):
+        return Report.objects.get_or_create(user=self.request.user)[0]
