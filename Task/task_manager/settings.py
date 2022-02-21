@@ -128,3 +128,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = "/tasks/"
 LOGIN_URL="/user/login/"
 LOGOUT_REDIRECT_URL="/user/login/"
+BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_TIMEZONE = TIME_ZONE
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
