@@ -29,19 +29,18 @@ def send_report(user):
 @shared_task
 def fetch_report():
   logger.info("fetch_settings: Started...")
-  start = datetime.now(timezone.utc) - timedelta(days=1)
-  logger.info(f"{start}\n")
+  start = datetime.now(timezone.utc) - timedelta(minutes=30)
   report_set = Report.objects.filter(
     send_report=True,
-    last_updated__gt=start,
+    last_updated__lt=start,
   )
   logger.info(f"fetch_report: {len(report_set)} users to report")
-  with transaction.atomic():
-    for report in report_set:
-      send_report(report.user)
-      report.last_updated = datetime.now(timezone.utc).replace(
-        hour=report.time.hour, minute=report.time.minute, second=report.time.second)
-      report.save()
+  for report in report_set:
+    send_report(report.user)
+    report.last_updated = datetime.now(timezone.utc).replace(hour=report.time.hour, minute=report.time.minute,
+            second=report.time.second)
+    report.save()
+
 
 
 @current_app.on_after_finalize.connect
