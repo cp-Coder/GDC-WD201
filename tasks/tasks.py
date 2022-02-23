@@ -5,7 +5,6 @@ from celery.schedules import crontab
 from celery.utils.log import get_logger
 from django.contrib.auth.models import User
 from django.db.models import Count
-from django.db import transaction
 from datetime import datetime, timedelta, timezone
 
 logger = get_logger(__name__)
@@ -29,10 +28,10 @@ def send_report(user):
 @shared_task
 def fetch_report():
   logger.info("fetch_settings: Started...")
-  start = datetime.now(timezone.utc) - timedelta(minutes=30)
+  start = datetime.now(timezone.utc) - timedelta(days=1)
   report_set = Report.objects.filter(
     send_report=True,
-    last_updated__lt=start,
+    last_updated__gt=start,
   )
   logger.info(f"fetch_report: {len(report_set)} users to report")
   for report in report_set:
@@ -40,8 +39,6 @@ def fetch_report():
     report.last_updated = datetime.now(timezone.utc).replace(hour=report.time.hour, minute=report.time.minute,
             second=report.time.second)
     report.save()
-
-
 
 @current_app.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
