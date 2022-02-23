@@ -61,5 +61,5 @@ python manage.py runserver
 
 # on different terminals
 celery -A task_manager beat
-celery -A tasks_manager worker --loglevel=INFO -E --pool=solo
+celery -A task_manager worker --loglevel=INFO -E --pool=solo
 ```
