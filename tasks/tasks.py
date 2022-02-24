@@ -31,7 +31,7 @@ def fetch_report():
   start = datetime.now(timezone.utc) - timedelta(days=1)
   report_set = Report.objects.filter(
     send_report=True,
-    last_updated__gt=start,
+    last_updated__lt=start,
   )
   logger.info(f"fetch_report: {len(report_set)} users to report")
   for report in report_set:
